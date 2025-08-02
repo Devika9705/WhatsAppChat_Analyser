@@ -20,7 +20,7 @@ if uploaded_file is not None:
     selected_user=st.sidebar.selectbox('Show analysis wrt',user_list)
     if st.sidebar.button("Show Analysis"):
        num_messages,words,num_media_messages,num_links = helper.fetch_stats(selected_user,df)
-       st.title("Top Statistics")
+       st.title("Statistics")
        col1,col2,col3,col4 = st.columns(4)
 
        with col1:
