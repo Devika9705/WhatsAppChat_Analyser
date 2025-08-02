@@ -4,3 +4,4 @@ matplotlib
 seaborn
 emoji
 numpy
+urlextract
