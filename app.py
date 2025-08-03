@@ -5,6 +5,15 @@ import seaborn as sns
 import preprocess
 from helper import most_common_words, daily_timeline
 
+# Hide Streamlit footer and menu
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.sidebar.title("WhatsApp_Analyser")
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
