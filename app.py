@@ -38,6 +38,7 @@ if st.sidebar.button("Show Statistics"):
            st.title(num_links)
 
     #monthly timeline
+       st.title("Monthly timeline")
        timeline = helper.monthly_timeline(selected_user,df)
        fig,ax = plt.subplots()
        ax.plot(timeline['time'],timeline['message'],color = 'green')
@@ -50,7 +51,7 @@ if st.sidebar.button("Show Statistics"):
        ax.plot(timeline['only_date'],timeline['message'],color = 'blue')
        plt.xticks(rotation='vertical')
        st.pyplot(fig)
-if st.sidebar.button("Show Activity"):
+if st.sidebar.button("Activity"):
 # activity map
        st.title("Activity")
        col1,col2 = st.columns(2)
@@ -75,7 +76,7 @@ if st.sidebar.button("Show Activity"):
        st.pyplot(fig)
 
 
-if st.sidebar.button("Show Busy User Analysis"):
+if st.sidebar.button("Busy User Analysis"):
            st.title('Most Busy Users')
            x,new_df= helper.most_busy_users(df)
            fig,ax = plt.subplots()
@@ -87,7 +88,7 @@ if st.sidebar.button("Show Busy User Analysis"):
                st.pyplot(fig)
            with col2:
                  st.dataframe(new_df)
-if st.sidebar.button("Show WordCloud"):
+if st.sidebar.button("WordCloud"):
     #WordCloud
     st.title('WordCloud')
     df_wc = helper.create_wordcloud(selected_user,df)
@@ -100,7 +101,7 @@ if st.sidebar.button("Show WordCloud"):
     plt.xticks(rotation = 'vertical')
     st.title("Most Common Words")
     st.pyplot(fig)
-if st.sidebar.button("Show Emoji Analysis"):
+if st.sidebar.button("Emoji Analysis"):
     st.title('Emoji Analysis')
 
     emoji_df = helper.emoji_helper(selected_user, df)
@@ -160,7 +161,7 @@ if st.sidebar.button("Show Mood Analysis"):
     ax1.axis('equal')
     st.pyplot(fig1)
 
-    # ---------- Optional: Horizontal Bar Chart ----------
+    # ----------  Horizontal Bar Chart ----------
     st.markdown("### 📊 Mood Usage Comparison")
 
     sorted_mood_df = pd.DataFrame({
