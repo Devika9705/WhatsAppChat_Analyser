@@ -5,6 +5,16 @@ import seaborn as sns
 import preprocess
 from helper import most_common_words, daily_timeline
 
+
+# Adding custom footer
+custom_footer = """
+<div style="position: fixed; bottom: 0; width: 100%; text-align: center; color: gray;">
+    <hr>
+    <p>Developed by Devika Shukla</p>
+</div>
+"""
+st.markdown(custom_footer, unsafe_allow_html=True)
+
 st.sidebar.title("WhatsApp_Analyser")
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
