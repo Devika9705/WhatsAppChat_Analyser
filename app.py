@@ -4,6 +4,7 @@ import helper
 import seaborn as sns
 import preprocess
 from helper import most_common_words, daily_timeline
+import pandas as pd
 
 st.sidebar.title("WhatsApp_Analyser")
 uploaded_file = st.sidebar.file_uploader("Choose a file")
@@ -18,7 +19,7 @@ if uploaded_file is not None:
     user_list.sort()
     user_list.insert(0,"Overall")
     selected_user=st.sidebar.selectbox('Show analysis wrt',user_list)
-    if st.sidebar.button("Show Analysis"):
+if st.sidebar.button("Show Statistics"):
        num_messages,words,num_media_messages,num_links = helper.fetch_stats(selected_user,df)
        st.title("Statistics")
        col1,col2,col3,col4 = st.columns(4)
@@ -49,7 +50,8 @@ if uploaded_file is not None:
        ax.plot(timeline['only_date'],timeline['message'],color = 'blue')
        plt.xticks(rotation='vertical')
        st.pyplot(fig)
-    # activity map
+if st.sidebar.button("Show Activity"):
+# activity map
        st.title("Activity")
        col1,col2 = st.columns(2)
        with col1:
@@ -73,7 +75,7 @@ if uploaded_file is not None:
        st.pyplot(fig)
 
 
-       if selected_user == 'Overall':
+if st.sidebar.button("Show Busy User Analysis"):
            st.title('Most Busy Users')
            x,new_df= helper.most_busy_users(df)
            fig,ax = plt.subplots()
@@ -85,6 +87,7 @@ if uploaded_file is not None:
                st.pyplot(fig)
            with col2:
                  st.dataframe(new_df)
+if st.sidebar.button("Show WordCloud"):
     #WordCloud
     st.title('WordCloud')
     df_wc = helper.create_wordcloud(selected_user,df)
@@ -97,18 +100,76 @@ if uploaded_file is not None:
     plt.xticks(rotation = 'vertical')
     st.title("Most Common Words")
     st.pyplot(fig)
-    emoji_df = helper.emoji_helper(selected_user,df)
+if st.sidebar.button("Show Emoji Analysis"):
     st.title('Emoji Analysis')
-    col1,col2 = st.columns(2)
+
+    emoji_df = helper.emoji_helper(selected_user, df)
+
+    col1, col2 = st.columns(2)
     with col1:
         st.dataframe(emoji_df)
+
     with col2:
-        fig,ax = plt.subplots()
-        ax.pie(emoji_df[1].head(),labels = emoji_df[0].head())
-        st.pyplot(fig)
+        if not emoji_df.empty:
+            fig, ax = plt.subplots()
+            ax.pie(emoji_df[1].head(), labels=emoji_df[0].head(), autopct="%0.2f")
+            st.pyplot(fig)
+        else:
+            st.write("No emojis found.")
 
+if st.sidebar.button("Show Mood Analysis"):
+    st.markdown("## 🧠 Mood / Sentiment Analysis")
 
+    sentiment_result = helper.sentiment_analysis(selected_user, df)
+    mood_counts = helper.extract_mood_counts(selected_user, df)
 
+    st.markdown("### 🧡 Mood-Based Emoji Metrics")
+    st.caption("This section reflects actual emoji usage from chat messages, grouped by mood.")
 
+    # ---------- Emoji Cards Layout ----------
+    mood_emojis = {
+        "Love": "❤️",
+        "Kissing": "😘",
+        "Hug": "🫂",
+        "Support": "🤗",
+        "Happy": "😄",
+        "Celebrate": "🎉",
+        "Angry": "🤬",
+        "Sad": "😢",
+        "Disappointed": "🙁",
+    }
 
+    moods = list(mood_emojis.keys())
+    cols = st.columns(3)
+    for idx, mood in enumerate(moods):
+        emoji_icon = mood_emojis[mood]
+        with cols[idx % 3]:
+            st.metric(label=f"{emoji_icon} {mood}", value=mood_counts.get(mood, 0))
 
+    st.markdown("---")
+
+    # ---------- Mood Distribution Pie Chart ----------
+    st.markdown("### 🥧 Mood Distribution")
+
+    pie_labels = [f"{mood_emojis[mood]} {mood}" for mood in mood_counts.keys()]
+    pie_values = [mood_counts[mood] for mood in mood_counts.keys()]
+    pie_colors = sns.color_palette("pastel")[0:len(pie_labels)]
+
+    fig1, ax1 = plt.subplots()
+    ax1.pie(pie_values, labels=pie_labels, autopct='%1.1f%%', startangle=90, colors=pie_colors, textprops={'fontsize': 9})
+    ax1.axis('equal')
+    st.pyplot(fig1)
+
+    # ---------- Optional: Horizontal Bar Chart ----------
+    st.markdown("### 📊 Mood Usage Comparison")
+
+    sorted_mood_df = pd.DataFrame({
+        "Mood": [f"{mood_emojis[mood]} {mood}" for mood in mood_counts.keys()],
+        "Count": [mood_counts[mood] for mood in mood_counts.keys()]
+    }).sort_values(by="Count", ascending=True)
+
+    fig2, ax2 = plt.subplots()
+    sns.barplot(x="Count", y="Mood", data=sorted_mood_df, palette="Set2", ax=ax2)
+    ax2.set_xlabel("Emoji Usage Count")
+    ax2.set_ylabel("Mood")
+    st.pyplot(fig2)

@@ -1,10 +1,9 @@
-
-
 from urlextract import URLExtract
 from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
 import emoji
+from textblob import TextBlob
 
 extract = URLExtract()
 def fetch_stats(selected_user, df):
@@ -85,5 +84,47 @@ def activity_heapmap(selected_user,df):
     activity = df.pivot_table(index='day_name',columns='period',values='message',aggfunc='count').fillna(0)
     return activity
 
+# Define emoji to mood category mapping
+mood_map = {
+    "❤️": "Love",
+    "💖": "Love",
+    "😘": "Kissing",
+    "🤬": "Angry",
+    "😢": "Sad",
+    "🙁": "Disappointed",
+    "😄": "Happy",
+    "🎉": "Celebrate",
+    "🤗": "Support",
+    "🫂": "Hug",
+}
 
+def extract_mood_counts(selected_user, df):
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
 
+    mood_counter = Counter()
+
+    for message in df['message']:
+        for char in message:
+            if emoji.is_emoji(char) and char in mood_map:
+                mood_counter[mood_map[char]] += 1
+
+    return mood_counter
+
+def sentiment_analysis(selected_user, df):
+    if selected_user != "Overall":
+        df = df[df['user'] == selected_user]
+
+    sentiments = {'Positive': 0, 'Neutral': 0, 'Negative': 0}
+
+    for message in df['message']:
+        blob = TextBlob(message)
+        polarity = blob.sentiment.polarity
+        if polarity > 0:
+            sentiments['Positive'] += 1
+        elif polarity == 0:
+            sentiments['Neutral'] += 1
+        else:
+            sentiments['Negative'] += 1
+
+    return sentiments
