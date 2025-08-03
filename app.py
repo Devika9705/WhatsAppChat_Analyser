@@ -5,6 +5,7 @@ import seaborn as sns
 import preprocess
 from helper import most_common_words, daily_timeline
 
+st.set_page_config(page_title="WhatsApp Chat Analyzer")
 st.sidebar.title("WhatsApp_Analyser")
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
