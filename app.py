@@ -59,7 +59,8 @@ st.sidebar.title("📂 Upload Chat File")
 uploaded_file = st.sidebar.file_uploader("Choose a WhatsApp chat (.txt)", type=["txt"])
 
 # Theme toggle
-is_dark = st.sidebar.toggle("🌙 Dark Mode", value=True)
+is_dark = st.sidebar.checkbox("🌙 Dark Mode", value=True)
+
 if is_dark:
     st.markdown("""
         <style>
