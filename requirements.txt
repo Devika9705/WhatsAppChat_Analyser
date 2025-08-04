@@ -1,23 +1,25 @@
-streamlit
-python-dotenv
-
+# Core Dependencies
+streamlit~=1.30.0
 pandas
 matplotlib
-seaborn
-emoji
 numpy
-urlextract
-wordcloud
-collection
-regex
 
-django-emoji
-attrs
-wheel
-protobuf
-pillow
-tornado
-Jinja2
-filelock
-setuptools
-vaderSentiment
+# Visualization
+seaborn
+plotly
+wordcloud
+
+# Text & Emoji Processing
+emoji
+urlextract
+nltk
+textblob
+
+# API + Environment Handling
+requests
+python-dotenv
+
+# Optional Enhancements
+beautifulsoup4
+lottie
+scikit-learn
