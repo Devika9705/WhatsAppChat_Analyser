@@ -128,3 +128,36 @@ def sentiment_analysis(selected_user, df):
             sentiments['Negative'] += 1
 
     return sentiments
+
+
+import requests
+
+
+def get_conversation_advice(name, messages):
+    prompt = f"""
+    Below are WhatsApp messages from {name}. Analyze their mood, tone, and talk style.
+    Then suggest how to communicate better with this person.
+
+    Messages:
+    {messages[:2000]}
+    """
+
+    headers = {
+        "Authorization": "Bearer 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",  # Put your OpenRouter key here
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "model": "mistralai/mixtral-8x7b-instruct",
+        "messages": [{"role": "user", "content": prompt}]
+    }
+
+    response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
+
+    try:
+        response_json = response.json()
+        return response_json['choices'][0]['message']['content']
+    except Exception as e:
+        print("❌ Error:", e)
+        print("❌ Response JSON:", response.text)
+        return "⚠️ Sorry, AI advice could not be generated. Please check your API key or try again later."
