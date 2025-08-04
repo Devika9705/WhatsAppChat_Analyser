@@ -1,25 +1,26 @@
-# Core Dependencies
-streamlit~=1.30.0
+# UI
+streamlit>=1.20.0,<2.0.0
+
+# Data Processing
 pandas
-matplotlib
 numpy
 
 # Visualization
+matplotlib
 seaborn
 plotly
 wordcloud
 
-# Text & Emoji Processing
+# Text + Chat Analysis
 emoji
 urlextract
 nltk
 textblob
 
-# API + Environment Handling
+# API and .env
 requests
 python-dotenv
 
-# Optional Enhancements
+# Optional enhancements
 beautifulsoup4
-lottie
 scikit-learn
