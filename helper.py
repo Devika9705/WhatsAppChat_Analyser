@@ -131,6 +131,12 @@ def sentiment_analysis(selected_user, df):
 
 
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load .env file
+
+api_key = os.getenv("OPENROUTER_API_KEY")
 
 
 def get_conversation_advice(name, messages):
@@ -143,7 +149,7 @@ def get_conversation_advice(name, messages):
     """
 
     headers = {
-        "Authorization": "Bearer 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",  # Put your OpenRouter key here
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
 

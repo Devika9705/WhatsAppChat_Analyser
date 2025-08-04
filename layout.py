@@ -68,13 +68,10 @@ def render_navbar():
     """, unsafe_allow_html=True)
 
     with st.container():
-        st.markdown("<div class='navbar-sticky nav-container'>", unsafe_allow_html=True)
         selected = st.radio(
-            "Choose Analysis Section:",
-            ["🧠 Mood Analysis", "☁️ Word Cloud", "📊 Content Stats", "😀 Emoji Analysis", "🤖 AI Mood Advice"],
-            horizontal=True,
-            label_visibility="collapsed",
-        )
-        st.markdown("</div>", unsafe_allow_html=True)
-
+        "Go to",
+        ["📊 Content Stats", "☁️ Word Cloud", "😀 Emoji Analysis", "🧠 Mood Analysis", "🤖 AI Mood Advice"],
+        horizontal=True,
+        key="navbar"
+    )
     return selected

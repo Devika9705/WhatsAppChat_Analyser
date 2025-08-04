@@ -1,0 +1,47 @@
+# -------------------
+# Python files
+# -------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# -------------------
+# Jupyter/IPython
+# -------------------
+.ipynb_checkpoints/
+
+# -------------------
+# Virtual environments
+# -------------------
+.venv/
+venv/
+env/
+ENV/
+
+# -------------------
+# Environment secrets
+# -------------------
+.env
+
+# -------------------
+# Streamlit config
+# -------------------
+.streamlit/config.toml
+
+# -------------------
+# VS Code and IDEs
+# -------------------
+.vscode/
+.idea/
+
+# -------------------
+# OS-specific
+# -------------------
+.DS_Store
+Thumbs.db
+
+# -------------------
+# Logs
+# -------------------
+*.log
