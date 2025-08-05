@@ -1,5 +1,3 @@
-# selection.py
-
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -65,13 +63,64 @@ def show_mood_analysis(df, selected_user):
 
 def show_ai_advice(df, selected_user):
     st.markdown("### 🤖 AI Mood Advice", unsafe_allow_html=True)
-    if selected_user != "Overall" and st.button("Get AI Mood & Advice"):
-        messages = df[df['user'] == selected_user]['message'].tolist()
-        combined = "\n".join(messages[:200])
-        with st.spinner("Analyzing with AI..."):
-            result = helper.get_conversation_advice(selected_user, combined)
-        st.success(f"AI Mood & Talk Advice for {selected_user}")
-        st.write(result)
+
+    if selected_user == "Overall":
+        st.warning("⚠️ Please select a specific user to receive personalized advice.")
+        return
+
+    # Session state key per user to avoid repeating advice
+    advice_key = f"advice_{selected_user}"
+    emotion_key = f"emotion_{selected_user}"
+
+    # Only generate if not already present
+    if advice_key not in st.session_state or emotion_key not in st.session_state:
+        with st.spinner("🔍 Analyzing mood and generating AI suggestions..."):
+            st.session_state[emotion_key] = helper.detect_dominant_emotion(selected_user, df)
+            st.session_state[advice_key] = helper.get_conversation_advice(selected_user, df)
+
+    # Show cached values
+    dominant_emotion = st.session_state[emotion_key]
+    advice = st.session_state[advice_key]
+
+    st.subheader("🧠 Dominant Emotion")
+    st.success(f"Detected mood for **{selected_user}**: **{dominant_emotion.capitalize()}**")
+
+    st.subheader("💬 Jarvis AI Suggests")
+
+    # Show animated advice only once
+    if f"animated_{selected_user}" not in st.session_state:
+        with st.empty():
+            import time
+            animated_text = ""
+            for char in advice:
+                animated_text += char
+                st.markdown(f"<div style='color:#00ffff; font-size:18px;'>{animated_text}█</div>", unsafe_allow_html=True)
+                time.sleep(0.01)
+        st.session_state[f"animated_{selected_user}"] = True
+    else:
+        st.markdown(f"<div style='color:#00ffff; font-size:18px;'>{advice}</div>", unsafe_allow_html=True)
+
+    # Optional input from user
+    st.markdown("---")
+    st.subheader("📝 Want to give your thoughts?")
+    feedback_text = st.text_input(
+        "Tell us how you're feeling or what you think about this advice",
+        placeholder="e.g., I feel this was accurate",
+        key=f"feedback_input_{selected_user}"
+    )
+
+    if feedback_text:
+        st.info("🔄 Thanks! Your input has been received.")
+
+    st.markdown("---")
+    st.subheader("👍 Was this advice helpful?")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("👍 Yes", key=f"yes_btn_{selected_user}"):
+            st.success("Glad it helped! 😊")
+    with col2:
+        if st.button("👎 No", key=f"no_btn_{selected_user}"):
+            st.warning("Thanks for the feedback. We'll try to improve! 💡")
 
 
 def show_stats(df, selected_user):

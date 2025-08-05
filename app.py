@@ -8,7 +8,7 @@ from layout import render_navbar
 
 st.set_page_config(page_title="WhatsApp Chat Analyzer", layout="wide")
 
-# Hide menu/footer and style app
+# --- Custom CSS Styling ---
 st.markdown("""
     <style>
     #MainMenu {visibility: hidden;}
@@ -54,13 +54,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Sidebar Upload & Theme Toggle
+# --- Sidebar Upload & Theme Toggle ---
 st.sidebar.title("📂 Upload Chat File")
 uploaded_file = st.sidebar.file_uploader("Choose a WhatsApp chat (.txt)", type=["txt"])
 
 # Theme toggle
 is_dark = st.sidebar.checkbox("🌙 Dark Mode", value=True)
 
+# Dark Mode Styling
 if is_dark:
     st.markdown("""
         <style>
@@ -68,15 +69,22 @@ if is_dark:
         .stMarkdown, .stDataFrame, .stText, .stTable { color: white; }
         </style>
     """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+        <style>
+        body, .stApp { background-color: #f9f9f9; color: #111; }
+        .stMarkdown, .stDataFrame, .stText, .stTable { color: #111; }
+        </style>
+    """, unsafe_allow_html=True)
 
-# Session states for button handling
+# --- Session State Initialization ---
 if 'analysis_requested' not in st.session_state:
     st.session_state.analysis_requested = False
 
 if 'analysis_ready' not in st.session_state:
     st.session_state.analysis_ready = False
 
-# Handle uploaded file
+# --- File Handling & Sidebar Selection ---
 if uploaded_file:
     bytes_data = uploaded_file.getvalue()
     data = bytes_data.decode("utf-8")
@@ -99,16 +107,16 @@ if uploaded_file:
         if st.button("❌ Clear Selection"):
             st.session_state.analysis_requested = False
             st.session_state.analysis_ready = False
+            st.success("Selection cleared. Please upload a file and select options again.")
             st.rerun()
 
-# Analysis section after upload and button press
+# --- Analysis Section ---
 if uploaded_file and st.session_state.analysis_requested:
-    # Show sticky navbar
+    # Sticky navbar
     st.markdown('<div class="navbar-container">', unsafe_allow_html=True)
     selected_section = render_navbar()
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Debugging output
     st.write(f"🛠️ DEBUG: Selected section: {selected_section}")
 
     if not selected_section:
@@ -118,31 +126,32 @@ if uploaded_file and st.session_state.analysis_requested:
                 <p>Please select an analysis section from the top navigation bar to begin exploring the chat.</p>
             </div>
         """, unsafe_allow_html=True)
-    else:
-        if st.session_state.analysis_ready:
-            st.markdown('<div class="fade-in" id="analysis-section">', unsafe_allow_html=True)
 
-            if selected_section == "🧠 Mood Analysis":
-                selection.show_mood_analysis(df, selected_user)
+    elif st.session_state.analysis_ready:
+        st.markdown('<div class="fade-in" id="analysis-section">', unsafe_allow_html=True)
 
-            elif selected_section == "☁️ Word Cloud":
-                selection.show_wordcloud(df, selected_user)
+        if selected_section == "🧠 Mood Analysis":
+            selection.show_mood_analysis(df, selected_user)
 
-            elif selected_section == "📊 Content Stats":
-                selection.show_stats(df, selected_user)
+        elif selected_section == "☁️ Word Cloud":
+            selection.show_wordcloud(df, selected_user)
 
-            elif selected_section == "😀 Emoji Analysis":
-                selection.show_emoji_analysis(df, selected_user)
+        elif selected_section == "📊 Content Stats":
+            selection.show_stats(df, selected_user)
 
-            elif selected_section == "🤖 AI Mood Advice":
-                selection.show_ai_advice(df, selected_user)
+        elif selected_section == "😀 Emoji Analysis":
+            selection.show_emoji_analysis(df, selected_user)
 
-            else:
-                st.warning("❗ Unknown section selected.")
+        elif selected_section == "🤖 AI Mood Advice":
+            selection.show_ai_advice(df, selected_user)
 
-            st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            st.warning("❗ Unknown section selected.")
 
-# Landing screen if no file is uploaded
+        # Always close the section
+        st.markdown('</div>', unsafe_allow_html=True)
+
+# --- Landing Page ---
 elif not uploaded_file:
     st.markdown("""
         <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
@@ -156,7 +165,7 @@ elif not uploaded_file:
         </div>
     """, unsafe_allow_html=True)
 
-# File uploaded but analysis not yet shown
+# --- Ready but not yet analyzed ---
 elif uploaded_file and not st.session_state.analysis_ready:
     st.markdown("""
         <div class="placeholder-section">
@@ -165,7 +174,7 @@ elif uploaded_file and not st.session_state.analysis_ready:
         </div>
     """, unsafe_allow_html=True)
 
-# Footer
+# --- Footer ---
 st.markdown("""
     <div style="position: fixed; bottom: 0; width: 100%; text-align: center; color: gray;">
         <hr>

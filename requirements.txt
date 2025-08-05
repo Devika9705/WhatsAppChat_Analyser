@@ -2,25 +2,38 @@
 streamlit>=1.20.0,<2.0.0
 
 # Data Processing
-pandas
+pandas~=2.3.1
 numpy
 
 # Visualization
-matplotlib
-seaborn
-plotly
-wordcloud
+matplotlib~=3.9.2
+seaborn~=0.13.2
+plotly~=6.2.0
+wordcloud~=1.9.4
 
 # Text + Chat Analysis
-emoji
-urlextract
+emoji~=2.14.1
+urlextract~=1.9.0
 nltk
-textblob
+textblob~=0.19.0
 
 # API and .env
-requests
-python-dotenv
+requests~=2.32.4
+python-dotenv~=1.1.1
 
 # Optional enhancements
 beautifulsoup4
 scikit-learn
+
+pip~=25.0.1
+django-emoji~=2.2.2
+attrs~=25.3.0
+wheel~=0.44.0
+protobuf~=4.25.3
+pillow~=11.3.0
+api~=0.0.7
+tornado~=6.5.1
+Jinja2~=3.1.6
+filelock~=3.18.0
+setuptools~=75.1.0
+vaderSentiment~=3.3.2
